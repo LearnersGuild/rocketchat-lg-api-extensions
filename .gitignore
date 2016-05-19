@@ -1,0 +1,6 @@
+.DS_Store
+*.log
+.npm
+.versions
+node_modules
+tmp
