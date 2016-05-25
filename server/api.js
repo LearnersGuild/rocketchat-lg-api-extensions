@@ -46,3 +46,24 @@ Api.addRoute('rooms/:name/send', {authRequired: true}, {
     }
   }
 })
+
+Api.addRoute('rooms/:name', {authRequired: true}, {
+  delete() {
+    try {
+      const {
+        userId,
+        urlParams: {name},
+      } = this
+
+      const result = Meteor.runAsUser(userId, function () {
+        const room = RocketChat.models.Rooms.findOneByName(name)
+        return Meteor.call('eraseRoom', room._id)
+      })
+      return successResponse({result})
+    } catch (error) {
+      console.error(error.stack)
+      RavenLogger.log(error)
+      return errorResponse(error)
+    }
+  }
+})
