@@ -58,10 +58,10 @@ Api.addRoute('rooms', {authRequired: true}, {
         }
       })
       return successResponse({result})
-    } catch (error) {
-      console.error(error.stack)
-      RavenLogger.log(error)
-      return errorResponse(error)
+    } catch (err) {
+      console.error(err.stack)
+      RavenLogger.log(err)
+      return errorResponse(err)
     }
   },
 })
@@ -81,10 +81,10 @@ Api.addRoute('rooms/:name/send', {authRequired: true}, {
         return Meteor.call('sendMessage', {msg, rid: room._id})
       })
       return successResponse({result})
-    } catch (error) {
-      console.error(error.stack)
-      RavenLogger.log(error)
-      return errorResponse(error)
+    } catch (err) {
+      console.error(err.stack)
+      RavenLogger.log(err)
+      return errorResponse(err)
     }
   }
 })
@@ -102,10 +102,10 @@ Api.addRoute('rooms/:name', {authRequired: true}, {
         return Meteor.call('eraseRoom', room._id)
       })
       return successResponse({result})
-    } catch (error) {
-      console.error(error.stack)
-      RavenLogger.log(error)
-      return errorResponse(error)
+    } catch (err) {
+      console.error(err.stack)
+      RavenLogger.log(err)
+      return errorResponse(err)
     }
   }
 })
