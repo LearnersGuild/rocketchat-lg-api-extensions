@@ -58,12 +58,62 @@ Api.addRoute('rooms', {authRequired: true}, {
         }
       })
       return successResponse({result})
-    } catch (error) {
-      console.error(error.stack)
-      RavenLogger.log(error)
-      return errorResponse(error)
+    } catch (err) {
+      console.error(err.stack)
+      RavenLogger.log(err)
+      return errorResponse(err)
     }
   },
+})
+
+Api.addRoute('rooms/:name/join', {authRequired: true}, {
+  post() {
+    try {
+      const {
+        userId,
+        bodyParams: {
+          members,
+        },
+        urlParams: {name},
+      } = this
+
+      if (!RocketChat.authz.hasPermission(userId, 'add-user-to-room')) {
+        throw new Meteor.Error('insufficient-permissions', 'you do not have permission to do this')
+      }
+      /* eslint-disable prefer-arrow-callback */
+      const room = Meteor.runAsUser(this.userId, () => {
+        return RocketChat.models.Rooms.findOneByName(name)
+      })
+      if (!room) {
+        throw new Meteor.Error('error-invalid-room', `there is no channel named ${name}`)
+      }
+      const usersJoined = []
+      const alreadyInRoom = []
+      members.forEach(username => {
+        const rcUser = RocketChat.models.Users.findOneByUsername(username)
+        if (!rcUser) {
+          throw new Meteor.Error('error-invalid-username', `there is no user named ${username}`)
+        }
+        Meteor.runAsUser(rcUser._id, () => {
+          Meteor.call('joinRoom', room._id, (err, joined) => {
+            if (err) {
+              throw err
+            }
+            if (joined) {
+              usersJoined.push(username)
+            } else {
+              alreadyInRoom.push(username)
+            }
+          })
+        })
+      })
+      return successResponse({result: {room: name, usersJoined, alreadyInRoom}})
+    } catch (err) {
+      console.error(err.stack)
+      RavenLogger.log(err)
+      return errorResponse(err)
+    }
+  }
 })
 
 Api.addRoute('rooms/:name/send', {authRequired: true}, {
@@ -81,10 +131,10 @@ Api.addRoute('rooms/:name/send', {authRequired: true}, {
         return Meteor.call('sendMessage', {msg, rid: room._id})
       })
       return successResponse({result})
-    } catch (error) {
-      console.error(error.stack)
-      RavenLogger.log(error)
-      return errorResponse(error)
+    } catch (err) {
+      console.error(err.stack)
+      RavenLogger.log(err)
+      return errorResponse(err)
     }
   }
 })
@@ -102,10 +152,10 @@ Api.addRoute('rooms/:name', {authRequired: true}, {
         return Meteor.call('eraseRoom', room._id)
       })
       return successResponse({result})
-    } catch (error) {
-      console.error(error.stack)
-      RavenLogger.log(error)
-      return errorResponse(error)
+    } catch (err) {
+      console.error(err.stack)
+      RavenLogger.log(err)
+      return errorResponse(err)
     }
   }
 })

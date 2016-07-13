@@ -1,6 +1,6 @@
 Package.describe({
   name: 'learnersguild:rocketchat-lg-api-extensions',
-  version: '0.3.0',
+  version: '0.4.0',
   summary: 'Custom API extensions for Rocket.Chat within Learners Guild.',
   git: 'https://github.com/LearnersGuild/rocketchat-lg-api-extensions'
 })
