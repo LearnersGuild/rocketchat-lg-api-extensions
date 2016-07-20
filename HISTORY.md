@@ -1,5 +1,8 @@
 # History
 
+#### 1.0.1
+use git-subrepo; stop publishing
+
 #### 0.4.0
 Adding join room (multiple users) API
 
