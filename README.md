@@ -1,3 +1,5 @@
+# DEPRECATED: this repo has been merged into [echo-chat][echo-chat]
+
 # learnersguild:rocketchat-lg-api-extensions
 
 Custom API extensions for Rocket.Chat within Learners Guild.
@@ -77,6 +79,7 @@ See the [LICENSE](./LICENSE) file.
 
 
 [IDM]: https://github.com/LearnersGuild/idm
+[echo-chat]: https://github.com/LearnersGuild/echo-chat
 [Rocket.Chat]: https://github.com/LearnersGuild/Rocket.Chat
 [learnersguild]: https://www.learnersguild.org/
 [HTTPie]: https://github.com/jkbrzt/httpie
