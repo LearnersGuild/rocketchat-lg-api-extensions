@@ -85,7 +85,7 @@ Api.addRoute('rooms/:name/join', {authRequired: true}, {
         return RocketChat.models.Rooms.findOneByName(name)
       })
       if (!room) {
-        throw new Meteor.Error('error-invalid-room', `there is no channel named ${name}`)
+        throw new Meteor.Error('error-invalid-room', `there is no room named ${name}`)
       }
       const usersJoined = []
       const alreadyInRoom = []
@@ -128,6 +128,9 @@ Api.addRoute('rooms/:name/send', {authRequired: true}, {
       /* eslint-disable prefer-arrow-callback */
       const result = Meteor.runAsUser(userId, function () {
         const room = RocketChat.models.Rooms.findOneByName(name)
+        if (!room) {
+          throw new Meteor.Error('error-invalid-room', `there is no room named ${name}`)
+        }
         return Meteor.call('sendMessage', {msg, rid: room._id})
       })
       return successResponse({result})
@@ -149,6 +152,9 @@ Api.addRoute('rooms/:name', {authRequired: true}, {
 
       const result = Meteor.runAsUser(userId, function () {
         const room = RocketChat.models.Rooms.findOneByName(name)
+        if (!room) {
+          throw new Meteor.Error('error-invalid-room', `there is no room named ${name}`)
+        }
         return Meteor.call('eraseRoom', room._id)
       })
       return successResponse({result})
